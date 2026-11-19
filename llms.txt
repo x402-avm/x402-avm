@@ -1,0 +1,27 @@
+# x402-avm
+
+> SDKs for paying for APIs and AI tools per call on Algorand, using the x402 protocol (HTTP 402 Payment Required). A server answers an unpaid request with 402 and a price; the client pays with a two-transaction atomic group (the server is fee payer) and retries; the payment settles only if the tool succeeds. Supports MainNet, TestNet, LocalNet and private networks, with ALGO or USDC. Network ids use the CAIP-2 Algorand profile.
+
+## Packages
+
+- [ai-economy-sdk](https://github.com/x402-avm/ai-economy-sdk): Python. Turns an MCP server into a paid service (PaymentGate) and pays for tools (paid_mcp_session). `pip install ai-economy-sdk`. MIT.
+- [x402-algorand](https://github.com/x402-avm/x402-algorand): Python. Algorand exact scheme plugin for the official x402 SDK. `pip install x402-algorand`. Apache-2.0.
+- [x402-avm-js](https://github.com/x402-avm/x402-avm-js): TypeScript. Pay 402 responses from the browser or Node with any Algorand wallet. `npm install x402-avm-js algosdk`. MIT.
+
+## Documentation
+
+- [Documentation site](https://x402-avm.github.io): concepts, tutorials, reference.
+- [Documentation index for models](https://x402-avm.github.io/llms.txt): the docs site's own llms.txt.
+- [Architecture](https://github.com/x402-avm/x402-avm/blob/main/ARCHITECTURE.md): components, payment lifecycle, trust model.
+- [Agent guide](https://github.com/x402-avm/x402-avm/blob/main/AGENTS.md): which repository for which task, how to run tests, conventions.
+
+## Examples
+
+- [examples](https://github.com/x402-avm/examples): runnable LocalNet, TestNet and MainNet examples.
+- [marketplace-demo](https://github.com/x402-avm/marketplace-demo): demonstration marketplace with 64 paid AI tools from 4 vendors on LocalNet.
+
+## Optional
+
+- [Roadmap](https://github.com/x402-avm/x402-avm/blob/main/ROADMAP.md): plans, not promises.
+- [Security policy](https://github.com/x402-avm/.github/blob/main/SECURITY.md): private vulnerability reporting.
+- [Official x402](https://github.com/x402-foundation/x402): the protocol and SDK these packages plug into.
