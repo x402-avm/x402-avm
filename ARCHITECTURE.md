@@ -8,7 +8,7 @@ How the packages in the x402-avm organisation fit together, how a payment moves 
 |---|---|---|
 | Client SDK | Reads the 402 challenge, builds the payment group, has the buyer sign their part, retries with `PAYMENT-SIGNATURE`. Applies spend controls. | `ai-economy-sdk` (`paid_mcp_session`, Python), `x402-avm-js` (`payForRequirement`, browser and Node), `x402-algorand` (client scheme for the official `x402Client`) |
 | Resource server / gate | Sits in front of the tool or API. Issues the 402 challenge, checks the payment, runs the tool, settles on success. | `ai-economy-sdk` (`PaymentGate`, `AIEconomySDK`), or the official x402 server with `x402-algorand` registered |
-| Facilitator | Verifies a payment and, when asked, submits it. In `PaymentGate` it runs in-process; with the official SDK it can be a separate service. | `x402-algorand` (`register_exact_avm_facilitator`), `ai-economy-sdk` (`DefaultAvmSigner`) |
+| Facilitator | Verifies a payment and, when asked, submits it. In `PaymentGate` it runs in-process; with the official SDK it can be a separate service. | `x402-algorand` (`register_exact_avm_facilitator`, `ServerAvmSigner`), `ai-economy-sdk` (`DefaultAvmSigner`) |
 | Algorand node (algod) | Simulates the group before the tool runs and confirms it at settlement. | External: AlgoNode for MainNet and TestNet by default, AlgoKit LocalNet locally |
 | Indexer | Read-only history. Used to find active passes (prepaid access) for a caller. | External: AlgoNode indexer by default |
 
@@ -41,7 +41,7 @@ Without a fee payer the payment is a single buyer-signed transaction with the st
 - **Network binding.** Network ids are CAIP-2 values derived from the genesis hash. A client pays only an offer on the network of its algod, and a facilitator on one network rejects groups built for another (TestNet payment against a MainNet facilitator is refused).
 - **Identity proofs.** An optional `X-Identity-Txn` header carries a signed zero-fee self-payment with the note `x402-identity:<address>:<timestamp>` and validity rounds 1 to 1000. It cannot execute on any live network, so it works only as a credential; the server accepts a timestamp within 120 seconds of its clock.
 - **Passes.** A pass is an ordinary payment to a vendor with the note `x402-pass:<scope>`, valid 30 days by default. The gate looks passes up in the indexer, so the indexer is trusted for that decision.
-- **Spend controls.** The Python clients refuse unknown assets and amounts over a cap. The `x402-algorand` default is 1,000,000 base units (1 ALGO or 1 USDC) per payment.
+- **Spend controls.** The clients refuse amounts over a cap before anything is signed: 1,000,000 base units (1 ALGO or 1 USDC) per payment by default. The Python clients (official `x402Client` with `x402-algorand`) also refuse assets other than ALGO and USDC by default; `x402-avm-js` (0.4.0) can restrict assets, networks and recipients (`allowedAssets`, `allowedNetworks`, `allowedPayTo`).
 
 ## Where each part lives
 
