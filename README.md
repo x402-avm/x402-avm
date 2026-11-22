@@ -5,55 +5,69 @@
 
 # x402-avm
 
-Charge per call for MCP tools and HTTP APIs, paid on Algorand with the [x402](https://github.com/x402-foundation/x402) protocol. A server answers an unpaid request with `402 Payment Required` and a price; the client signs an Algorand payment and retries; the server runs the tool and settles the payment only if the tool succeeds. Buyers need a funded Algorand account, not an API key, and pay exactly the price: the server's fee payer covers the network fee. Prices are in ALGO or any Algorand Standard Asset, such as USDC.
+**Let AI agents and apps pay for your tools and APIs per call, in ALGO or USDC, with no accounts and no API keys.**
+
+An AI agent can't fill in a sign-up form or a credit card. A tool worth a tenth of a cent per call can't be sold on card rails at all. x402-avm makes the price part of the HTTP response: your server answers `402 Payment Required`, the caller's wallet pays on Algorand and retries, and the result comes back in the same request.
 
 [![Watch the two-minute demo](https://x402-avm.github.io/videos/x402-avm-demo-poster.png)](https://x402-avm.github.io/videos/x402-avm-demo.mp4)
 
-Two-minute demo: a real payment on LocalNet, spend controls, TestNet and MainNet, and the docs.
+[Documentation](https://x402-avm.github.io) · [Quickstart](https://x402-avm.github.io/quickstart) · [Examples](https://github.com/x402-avm/examples) · [Discussions](https://github.com/x402-avm/x402-avm/discussions)
 
-## Packages
+## What you can build
 
-| Package | Version | Install | What it does |
-|---|---|---|---|
-| [`ai-economy-sdk`](https://github.com/x402-avm/ai-economy-sdk) (Python, MIT) | 0.5.1 | `pip install ai-economy-sdk` | Turns a FastMCP server into a paid service (`PaymentGate`) and pays for tools from Python clients and agents (`paid_mcp_session`), with spend controls, passes, identity proofs and replay protection. |
-| [`x402-algorand`](https://github.com/x402-avm/x402-algorand) (Python, Apache-2.0) | 0.3.0 | `pip install x402-algorand` | The Algorand [`exact` scheme](https://github.com/x402-foundation/x402/blob/main/specs/schemes/exact/scheme_exact_algo.md) as a plugin for the official x402 Python SDK, with ready-made signers (`PayerAvmSigner`, `ServerAvmSigner`). |
-| [`x402-avm-js`](https://github.com/x402-avm/x402-avm-js) (TypeScript, MIT) | 0.4.1 | `npm install x402-avm-js algosdk` | Pays 402 responses from the browser or Node.js 20+ with any Algorand wallet, within spend limits checked before signing. |
+- **Sell an MCP tool.** Put a price on each tool of a FastMCP server, and any MCP client with a wallet can call it. → [Guide](https://x402-avm.github.io/build/sell-mcp-tools)
+- **Paywall an HTTP API.** Charge per request on a FastAPI or Flask route with the official x402 SDK. → [Guide](https://x402-avm.github.io/build/paywall-http-api)
+- **Let your agent pay.** Give an agent a wallet and a budget, and it pays for tools on its own within limits checked before anything is signed. → [Guide](https://x402-avm.github.io/build/ai-agents)
+- **Pay from a web app.** Let users pay with Pera, Defly or any Algorand wallet. → [Guide](https://x402-avm.github.io/build/pay-from-browser)
 
-`ai-economy-sdk` installs `x402-algorand`, which installs the official `x402` package (2.28 or later). Both Python packages support Python 3.10 to 3.14.
+## Why it's built this way
 
-## Quickstart
+- **The buyer pays only when the call works.** The server checks the payment, runs the tool, and submits the payment to the chain only if the tool succeeded.
+- **The buyer pays exactly the price.** The server covers the network fee, so 0.005 ALGO costs 0.005 ALGO.
+- **Nothing sits in the middle.** Money goes straight from the buyer's account to yours. There is no platform account and no payout schedule.
+- **Spend limits come first.** Clients refuse any payment over a per-call cap (1 ALGO or 1 USDC by default) or to an asset, network or recipient you didn't allow, before signing.
+- **It's the open standard.** The packages implement [x402](https://www.x402.org) and the official [Algorand `exact` scheme](https://github.com/x402-foundation/x402/blob/main/specs/schemes/exact/scheme_exact_algo.md), so they work with any other x402 software on Algorand.
 
-Needs Python 3.10+, Node.js 20+, Docker and [AlgoKit](https://github.com/algorandfoundation/algokit-cli). Everything runs on LocalNet, with no real funds. These are the commands of the [docs Quickstart](https://x402-avm.github.io/quickstart), which explains each step.
+## Try it in five minutes
+
+Everything runs on your machine on Algorand LocalNet, with test money. You need Python 3.10+, Docker and [AlgoKit](https://github.com/algorandfoundation/algokit-cli).
 
 ```bash
-algokit localnet start                  # algod :4001, indexer :8980, KMD :4002
-git clone https://github.com/x402-avm/examples.git
-cd examples
-python -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
-npm install
+algokit localnet start
+git clone https://github.com/x402-avm/examples.git && cd examples
+python -m venv .venv && source .venv/bin/activate && pip install -r requirements.txt
 
-# Terminal 1: a paid MCP tool (echo, 5,000 microALGO per call) on http://127.0.0.1:9201/mcp
-python localnet/quickstart_server.py
-# Terminal 2: pay for one call from Python
-python localnet/quickstart_client.py    # Result: echo: hello world / Balance drop: 5000 microALGO
-
-# Pay an x402 HTTP endpoint from JavaScript
-python localnet/server_for_js.py        # terminal 1: paywall on http://127.0.0.1:9221/paid
-node localnet/js_pay.mjs                # terminal 2
+python localnet/quickstart_server.py    # terminal 1: a tool that costs 0.005 ALGO per call
+python localnet/quickstart_client.py    # terminal 2: pays for one call
+# Result: echo: hello world
+# Balance drop: 5000 microALGO
 ```
 
-## Links
+The [Quickstart](https://x402-avm.github.io/quickstart) walks through what just happened. When you're ready for real money, see [Going to MainNet](https://x402-avm.github.io/production/mainnet).
 
-- Documentation: https://x402-avm.github.io ([llms.txt](https://x402-avm.github.io/llms.txt) for AI tools)
-- Examples: https://github.com/x402-avm/examples
-- Demo: [marketplace-demo](https://github.com/x402-avm/marketplace-demo), a demonstration marketplace of 64 paid AI tools from 4 vendors on LocalNet
-- Questions and ideas: [GitHub Discussions](https://github.com/x402-avm/x402-avm/discussions)
-- Security: report vulnerabilities privately, following the [security policy](https://github.com/x402-avm/.github/blob/main/SECURITY.md); do not open public issues for them
-- In this repository: [ARCHITECTURE.md](ARCHITECTURE.md) (payment lifecycle and trust model), [ROADMAP.md](ROADMAP.md), [AGENTS.md](AGENTS.md)
+## The packages
+
+Most projects need only one.
+
+| Package | Install | Use it to |
+|---|---|---|
+| [`ai-economy-sdk`](https://github.com/x402-avm/ai-economy-sdk) | `pip install ai-economy-sdk` | Sell MCP tools, and pay for them from Python and agents |
+| [`x402-algorand`](https://github.com/x402-avm/x402-algorand) | `pip install x402-algorand` | Add Algorand to the official x402 Python SDK, for HTTP APIs and facilitators |
+| [`x402-avm-js`](https://github.com/x402-avm/x402-avm-js) | `npm install x402-avm-js algosdk` | Pay from a browser wallet or Node.js |
+
+The repositories in this organisation:
+
+- [`examples`](https://github.com/x402-avm/examples): runnable examples for LocalNet, TestNet and MainNet.
+- [`marketplace-demo`](https://github.com/x402-avm/marketplace-demo): a demo marketplace of 64 paid AI tools from 4 vendors, running on LocalNet.
+- [`x402-avm.github.io`](https://github.com/x402-avm/x402-avm.github.io): the documentation site, including [`llms.txt`](https://x402-avm.github.io/llms.txt) for AI coding tools.
+- This repository: the [architecture and trust model](ARCHITECTURE.md), the [roadmap](ROADMAP.md) and [AGENTS.md](AGENTS.md).
+
+## Get involved
+
+Questions and ideas go in [Discussions](https://github.com/x402-avm/x402-avm/discussions), and bugs go in the issues of the relevant repository. Report security problems privately, following the [security policy](https://github.com/x402-avm/.github/blob/main/SECURITY.md).
 
 ## Licence
 
-`ai-economy-sdk` and `x402-avm-js` are MIT. `x402-algorand` is Apache-2.0 and ships a `NOTICE` that reproduces the upstream notices. The content of this hub repository is MIT; see [LICENSE](LICENSE).
+`ai-economy-sdk` and `x402-avm-js` are MIT. `x402-algorand` is Apache-2.0, with a `NOTICE` that reproduces the upstream notices. This repository is MIT.
 
-x402-avm is an independent project, not affiliated with GoPlausible's x402-avm packages, from which x402-algorand is derived (see [NOTICE](https://github.com/x402-avm/x402-algorand/blob/main/NOTICE)).
+x402-avm is an independent project. It is not affiliated with GoPlausible's x402-avm packages, from which x402-algorand is derived (see [NOTICE](https://github.com/x402-avm/x402-algorand/blob/main/NOTICE)).
