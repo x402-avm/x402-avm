@@ -11,9 +11,9 @@ Charge per call for MCP tools and HTTP APIs, paid on Algorand with the [x402](ht
 
 | Package | Version | Install | What it does |
 |---|---|---|---|
-| [`ai-economy-sdk`](https://github.com/x402-avm/ai-economy-sdk) (Python, MIT) | 0.5.0 | `pip install ai-economy-sdk` | Turns a FastMCP server into a paid service (`PaymentGate`) and pays for tools from Python clients and agents (`paid_mcp_session`), with spend controls, passes, identity proofs and replay protection. |
+| [`ai-economy-sdk`](https://github.com/x402-avm/ai-economy-sdk) (Python, MIT) | 0.5.1 | `pip install ai-economy-sdk` | Turns a FastMCP server into a paid service (`PaymentGate`) and pays for tools from Python clients and agents (`paid_mcp_session`), with spend controls, passes, identity proofs and replay protection. |
 | [`x402-algorand`](https://github.com/x402-avm/x402-algorand) (Python, Apache-2.0) | 0.3.0 | `pip install x402-algorand` | The Algorand [`exact` scheme](https://github.com/x402-foundation/x402/blob/main/specs/schemes/exact/scheme_exact_algo.md) as a plugin for the official x402 Python SDK, with ready-made signers (`PayerAvmSigner`, `ServerAvmSigner`). |
-| [`x402-avm-js`](https://github.com/x402-avm/x402-avm-js) (TypeScript, MIT) | 0.4.0 | `npm install x402-avm-js algosdk` | Pays 402 responses from the browser or Node.js 20+ with any Algorand wallet, within spend limits checked before signing. |
+| [`x402-avm-js`](https://github.com/x402-avm/x402-avm-js) (TypeScript, MIT) | 0.4.1 | `npm install x402-avm-js algosdk` | Pays 402 responses from the browser or Node.js 20+ with any Algorand wallet, within spend limits checked before signing. |
 
 `ai-economy-sdk` installs `x402-algorand`, which installs the official `x402` package (2.28 or later). Both Python packages support Python 3.10 to 3.14.
 
