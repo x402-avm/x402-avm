@@ -7,6 +7,10 @@
 
 Charge per call for MCP tools and HTTP APIs, paid on Algorand with the [x402](https://github.com/x402-foundation/x402) protocol. A server answers an unpaid request with `402 Payment Required` and a price; the client signs an Algorand payment and retries; the server runs the tool and settles the payment only if the tool succeeds. Buyers need a funded Algorand account, not an API key, and pay exactly the price: the server's fee payer covers the network fee. Prices are in ALGO or any Algorand Standard Asset, such as USDC.
 
+[![Watch the two-minute demo](https://x402-avm.github.io/videos/x402-avm-demo-poster.png)](https://x402-avm.github.io/videos/x402-avm-demo.mp4)
+
+Two-minute demo: a real payment on LocalNet, spend controls, TestNet and MainNet, and the docs.
+
 ## Packages
 
 | Package | Version | Install | What it does |
